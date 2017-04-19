@@ -63,6 +63,15 @@
 
         <li>
 
+            <a class="apidocElementLiA" href="#apidoc.element.streamqueue.streamqueue">
+            function <span class="apidocSignatureSpan"></span>streamqueue
+            <span class="apidocSignatureSpan">(options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
             <a class="apidocElementLiA" href="#apidoc.element.streamqueue.obj">
             function <span class="apidocSignatureSpan">streamqueue.</span>obj
             <span class="apidocSignatureSpan">(options)</span>
@@ -569,6 +578,88 @@
 
 <div class="apidocSectionDiv">
 <h1><a href="#apidoc.module.streamqueue" id="apidoc.module.streamqueue">module streamqueue</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.streamqueue.streamqueue" id="apidoc.element.streamqueue.streamqueue">
+        function <span class="apidocSignatureSpan"></span>streamqueue
+        <span class="apidocSignatureSpan">(options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function StreamQueue(options) {
+  var _self = this;
+
+  options = options || {};
+
+  // Ensure new were used
+  if(!(this instanceof StreamQueue)) {
+    return new (StreamQueue.bind.apply(StreamQueue,
+      [StreamQueue].concat([].slice.call(arguments, 0))));
+  }
+
+  // Set queue state object
+  this._queueState = {
+    _pauseFlowingStream: true,
+    _resumeFlowingStream: true,
+    _objectMode: false,
+    _streams: [],
+    _running: false,
+    _ending: false,
+    _awaitDrain: null,
+    _internalStream: null,
+    _curStream: null
+  };
+
+  // Options
+  if(!(isStream(options) || &#x27;function&#x27; === typeof options)) {
+    if(&#x27;boolean&#x27; == typeof options.pauseFlowingStream) {
+      this._queueState._pauseFlowingStream = options.pauseFlowingStream;
+      delete options.pauseFlowingStream;
+    }
+    if(&#x27;boolean&#x27; == typeof options.resumeFlowingStream) {
+      this._queueState._resumeFlowingStream = options.resumeFlowingStream;
+      delete options.resumeFlowingStream;
+    }
+    if(&#x27;boolean&#x27; == typeof options.objectMode) {
+      this._queueState._objectMode = options.objectMode;
+    }
+  }
+
+  // Prepare the stream to pipe in
+  this._queueState._internalStream = new Stream.Writable(
+    isStream(options)  || &#x27;function&#x27; === typeof options ?
+      undefined :
+      options
+  );
+  this._queueState._internalStream._write = function(chunk, encoding, cb) {
+    if(_self.push(chunk)) {
+      cb();
+      return true;
+    }
+    _self._queueState._awaitDrain = cb;
+    return false;
+  };
+
+  // Parent constructor
+  Stream.Readable.call(this,
+    isStream(options)  || &#x27;function&#x27; === typeof options ?
+      undefined :
+      options
+  );
+
+  // Queue given streams and ends
+  if(arguments.length &#x3e; 1 || isStream(options) ||
+    &#x27;function&#x27; === typeof options) {
+    this.done.apply(this,
+      [].slice.call(arguments,
+        isStream(options) || &#x27;function&#x27; === typeof options ? 0 : 1));
+  }
+
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
 
 
     <h2>
