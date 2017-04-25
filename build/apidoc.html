@@ -933,7 +933,23 @@ A shortcut for `StreamQueue({objectMode: true})`.
 
   Stream.call(this);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+  streams = streams.map(function(stream) {
+function wrapper(stream) {
+  stream.on(&#x27;error&#x27;, function(err) {
+    _self.emit(&#x27;error&#x27;, err);
+  });
+  if(&#x27;undefined&#x27; == typeof stream._readableState) {
+    stream = (new Stream.<span class="apidocCodeKeywordSpan">Readable</span>({objectMode: _self._queueState._objectMode}))
+      .wrap(stream);
+  }
+  if(_self._queueState._pauseFlowingStream &#x26;&#x26; stream._readableState.flowing) {
+    stream.pause();
+  }
+  return stream;
+}
+...</pre></li>
     </ul>
 
 
@@ -1094,7 +1110,23 @@ A shortcut for `StreamQueue({objectMode: true})`.
 
   Stream.call(this);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  }
+  if(&#x27;boolean&#x27; == typeof options.objectMode) {
+    this._queueState._objectMode = options.objectMode;
+  }
+}
+
+// Prepare the stream to pipe in
+this._queueState._internalStream = new Stream.<span class="apidocCodeKeywordSpan">Writable</span>(
+  isStream(options)  || &#x27;function&#x27; === typeof options ?
+    undefined :
+    options
+);
+this._queueState._internalStream._write = function(chunk, encoding, cb) {
+  if(_self.push(chunk)) {
+    cb();
+...</pre></li>
     </ul>
 
 
@@ -1559,7 +1591,22 @@ A shortcut for `StreamQueue({objectMode: true})`.
   this._transformState.needTransform = false;
   return Duplex.prototype.push.call(this, chunk, encoding);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// Prepare the stream to pipe in
+this._queueState._internalStream = new Stream.Writable(
+  isStream(options)  || &#x27;function&#x27; === typeof options ?
+    undefined :
+    options
+);
+this._queueState._internalStream._write = function(chunk, encoding, cb) {
+  if(_self.<span class="apidocCodeKeywordSpan">push</span>(chunk)) {
+    cb();
+    return true;
+  }
+  _self._queueState._awaitDrain = cb;
+  return false;
+};
+...</pre></li>
     </ul>
 
 
@@ -1591,7 +1638,23 @@ A shortcut for `StreamQueue({objectMode: true})`.
 
   Stream.call(this);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  }
+  if(&#x27;boolean&#x27; == typeof options.objectMode) {
+    this._queueState._objectMode = options.objectMode;
+  }
+}
+
+// Prepare the stream to pipe in
+this._queueState._internalStream = new Stream.<span class="apidocCodeKeywordSpan">Writable</span>(
+  isStream(options)  || &#x27;function&#x27; === typeof options ?
+    undefined :
+    options
+);
+this._queueState._internalStream._write = function(chunk, encoding, cb) {
+  if(_self.push(chunk)) {
+    cb();
+...</pre></li>
     </ul>
 
 
@@ -1894,7 +1957,23 @@ var queue = streamqueue(
 
   return res;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+if(this._queueState._ending) {
+  throw new Error(&#x27;Cannot add more streams to the queue.&#x27;);
+}
+
+streams = streams.map(function(stream) {
+  function wrapper(stream) {
+    stream.<span class="apidocCodeKeywordSpan">on</span>(&#x27;error&#x27;, function(err) {
+      _self.emit(&#x27;error&#x27;, err);
+    });
+    if(&#x27;undefined&#x27; == typeof stream._readableState) {
+      stream = (new Stream.Readable({objectMode: _self._queueState._objectMode}))
+        .wrap(stream);
+    }
+    if(_self._queueState._pauseFlowingStream &#x26;&#x26; stream._readableState.flowing) {
+...</pre></li>
     </ul>
 
 
@@ -1910,7 +1989,23 @@ var queue = streamqueue(
   emitDataEvents(this, true);
   this.emit(&#x27;pause&#x27;);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+    _self.emit(&#x27;error&#x27;, err);
+  });
+  if(&#x27;undefined&#x27; == typeof stream._readableState) {
+    stream = (new Stream.Readable({objectMode: _self._queueState._objectMode}))
+      .wrap(stream);
+  }
+  if(_self._queueState._pauseFlowingStream &#x26;&#x26; stream._readableState.flowing) {
+    stream.<span class="apidocCodeKeywordSpan">pause</span>();
+  }
+  return stream;
+}
+if(&#x27;function&#x27; === typeof stream) {
+  return function() {
+    return wrapper(stream());
+  };
+...</pre></li>
     </ul>
 
 
@@ -2080,7 +2175,22 @@ var queue = streamqueue(
 
   return readableAddChunk(this, state, chunk, encoding, false);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+// Prepare the stream to pipe in
+this._queueState._internalStream = new Stream.Writable(
+  isStream(options)  || &#x27;function&#x27; === typeof options ?
+    undefined :
+    options
+);
+this._queueState._internalStream._write = function(chunk, encoding, cb) {
+  if(_self.<span class="apidocCodeKeywordSpan">push</span>(chunk)) {
+    cb();
+    return true;
+  }
+  _self._queueState._awaitDrain = cb;
+  return false;
+};
+...</pre></li>
     </ul>
 
 
@@ -2232,7 +2342,23 @@ var queue = streamqueue(
   this.read(0);
   this.emit(&#x27;resume&#x27;);
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+} else {
+  this._queueState._curStream = this._queueState._streams.shift();
+}
+this._queueState._curStream.once(&#x27;end&#x27;, function() {
+  _self._pipeNextStream();
+});
+if(_self._queueState._resumeFlowingStream&#x26;&#x26;this._queueState._curStream._readableState.flowing) {
+  this._queueState._curStream.<span class="apidocCodeKeywordSpan">resume</span>();
+}
+this._queueState._curStream.pipe(this._queueState._internalStream, {end: false});
+};
+
+// Queue each stream given in argument
+StreamQueue.prototype.done = function() {
+var _self = this;
+...</pre></li>
     </ul>
 
 
@@ -2407,7 +2533,23 @@ var queue = streamqueue(
 
   return self;
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+  streams = streams.map(function(stream) {
+function wrapper(stream) {
+  stream.on(&#x27;error&#x27;, function(err) {
+    _self.emit(&#x27;error&#x27;, err);
+  });
+  if(&#x27;undefined&#x27; == typeof stream._readableState) {
+    stream = (new Stream.Readable({objectMode: _self._queueState._objectMode}))
+      .<span class="apidocCodeKeywordSpan">wrap</span>(stream);
+  }
+  if(_self._queueState._pauseFlowingStream &#x26;&#x26; stream._readableState.flowing) {
+    stream.pause();
+  }
+  return stream;
+}
+if(&#x27;function&#x27; === typeof stream) {
+...</pre></li>
     </ul>
 
 
