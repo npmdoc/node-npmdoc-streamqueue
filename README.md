@@ -1,6 +1,6 @@
 # npmdoc-streamqueue
 
-#### api documentation for  [streamqueue (v1.1.1)](https://github.com/nfroidure/StreamQueue)  [![npm package](https://img.shields.io/npm/v/npmdoc-streamqueue.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-streamqueue) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-streamqueue.svg)](https://travis-ci.org/npmdoc/node-npmdoc-streamqueue)
+#### basic api documentation for  [streamqueue (v1.1.1)](https://github.com/nfroidure/StreamQueue)  [![npm package](https://img.shields.io/npm/v/npmdoc-streamqueue.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-streamqueue) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-streamqueue.svg)](https://travis-ci.org/npmdoc/node-npmdoc-streamqueue)
 
 #### Pipe queued streams progressively, keeping datas order.
 
@@ -82,7 +82,8 @@
         "lint": "eslint **/*.js *.js",
         "test": "./node_modules/mocha/bin/mocha tests/*.mocha.js"
     },
-    "version": "1.1.1"
+    "version": "1.1.1",
+    "bin": {}
 }
 ```
 
